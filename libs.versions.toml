@@ -1,0 +1,5 @@
+[libraries]
+apacheCommonsLang3 = { module = "org.apache.commons:commons-lang3", version = "3.16.0" }
+jsonPath = { module = "com.jayway.jsonpath:json-path", version = "2.9.0" }
+apacheCommonsCompress = { module = "org.apache.commons:commons-compress", version = "1.26.0" }
+xmlUnit = {module = "org.xmlunit:xmlunit-core", version = "2.10.0"}

@@ -17,5 +17,15 @@ dependencies{
     testImplementation(platform("org.testcontainers:testcontainers-bom:1.20.1")) //import bom
     testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:junit-jupiter")
+    constraints {
+        testImplementation(libs.apacheCommonsCompress){
+            because("Apache Commons Compress: Denial of service caused by an infinite loop for a corrupted DUMP file")
+        }
+    }
     testImplementation("net.javacrumbs.json-unit:json-unit-assertj:3.0.0")
+    constraints{
+        testImplementation(libs.jsonPath){
+            because("json-path Out-of-bounds Write vulnerability")
+        }
+    }
 }

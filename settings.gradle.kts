@@ -1,5 +1,11 @@
 rootProject.name = "stored-retry"
-
+dependencyResolutionManagement {
+    versionCatalogs {
+        create("libs") {
+            from(files("libs.versions.toml"))
+        }
+    }
+}
 include(":stored-retry-core")
 project(":stored-retry-core").projectDir = file("libraries/core")
 include(":stored-retry-jobrunr")

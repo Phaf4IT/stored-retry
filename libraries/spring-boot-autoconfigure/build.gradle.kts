@@ -23,10 +23,20 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.26.3")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    constraints {
+        testImplementation(libs.xmlUnit){
+            because("XMLUnit for Java has Insecure Defaults when Processing XSLT Stylesheets")
+        }
+    }
 
     testImplementation(platform("org.testcontainers:testcontainers-bom:1.20.1")) //import bom
     testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:junit-jupiter")
+    constraints {
+        testImplementation(libs.apacheCommonsCompress){
+            because("Apache Commons Compress: Denial of service caused by an infinite loop for a corrupted DUMP file")
+        }
+    }
 
     testImplementation("io.projectreactor:reactor-core")
 
