@@ -1,5 +1,5 @@
 dependencies{
-    implementation(project(":stored-retry:core"))
+    implementation(project(":stored-retry-core"))
     compileOnly("org.slf4j:slf4j-api:2.0.13")
     // database
     implementation("org.postgresql:postgresql:42.7.3")

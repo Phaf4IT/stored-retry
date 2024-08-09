@@ -4,9 +4,9 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":stored-retry:core"))
-    compileOnly(project(":stored-retry:postgres"))
-    compileOnly(project(":stored-retry:jobrunr"))
+    implementation(project(":stored-retry-core"))
+    compileOnly(project(":stored-retry-postgres"))
+    compileOnly(project(":stored-retry-jobrunr"))
     // spring specific stuff
     implementation(platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES))
     compileOnly("org.springframework.boot:spring-boot-autoconfigure")
@@ -31,8 +31,8 @@ dependencies {
     testImplementation("io.projectreactor:reactor-core")
 
     // TODO let's test with and without
-    testImplementation(project(":stored-retry:postgres"))
-//    testImplementation(project(":stored-retry:jobrunr"))
+    testImplementation(project(":stored-retry-postgres"))
+//    testImplementation(project(":stored-retry-jobrunr"))
 }
 
 

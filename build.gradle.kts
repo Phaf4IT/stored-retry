@@ -2,8 +2,8 @@ plugins {
     `java-library`
 }
 
-group = "eu.phaf"
-version = "1.0-SNAPSHOT"
+group = "io.github.phaf4it"
+version = "0.0.1-SNAPSHOT"
 
 allprojects {
     repositories {
@@ -13,6 +13,11 @@ allprojects {
 
 subprojects {
     apply(plugin = "java-library")
+    apply(plugin = "maven-publish")
+
+    project.version = rootProject.version
+    project.group = rootProject.group
+
     tasks.named<Test>("test") {
         useJUnitPlatform()
     }
@@ -21,6 +26,29 @@ subprojects {
         enabled = true
         // Remove `plain` postfix from jar file name
         archiveClassifier.set("")
+    }
+
+    configure<PublishingExtension> {
+        publications {
+            create<MavenPublication>(project.name) {
+                from(components["java"])
+            }
+        }
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                url = uri("https://maven.pkg.github.com/octocat/hello-world")
+                credentials {
+                    username = System.getenv("GITHUB_ACTOR")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
+            }
+            // just here to validate :)
+            maven {
+                name = "MyLocalRepo"
+                url = uri(layout.buildDirectory.dir("repo"))
+            }
+        }
     }
 }
 
