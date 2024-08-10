@@ -1,5 +1,6 @@
- ![example branch parameter](https://github.com/RDBreed/stored-retry/actions/workflows/gradle.yml/badge.svg)
- # Stored Retry
+ ![example branch parameter](https://github.com/RDBreed/stored-retry/actions/workflows/gradle.yml/badge.svg) [![](https://jitpack.io/v/Phaf4IT/stored-retry.svg)](https://jitpack.io/#Phaf4IT/stored-retry)
+
+  # Stored Retry
 
 *Store & distribute your retries*
 

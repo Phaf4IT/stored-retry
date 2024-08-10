@@ -8,6 +8,7 @@ version = "0.0.1-SNAPSHOT"
 allprojects {
     repositories {
         mavenCentral()
+        maven { url = uri("https://jitpack.io") }
     }
 }
 
@@ -17,6 +18,14 @@ subprojects {
 
     project.version = rootProject.version
     project.group = rootProject.group
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
 
     tasks.named<Test>("test") {
         useJUnitPlatform()
