@@ -8,7 +8,14 @@ version = "0.0.1-SNAPSHOT"
 allprojects {
     repositories {
         mavenCentral()
-        maven { url = uri("https://jitpack.io") }
+        // just for example, not being use :)
+        maven {
+            url = uri("https://jitpack.io")
+            content {
+                // this repository *only* contains artifacts with group "com.github.Phaf4IT.stored-retry"
+                includeGroup("com.github.Phaf4IT.stored-retry")
+            }
+        }
     }
 }
 

@@ -6,26 +6,30 @@ import java.util.List;
 public class RetryTaskManager implements TaskManager {
     private final RetryTaskActionRepository retryTaskActionRepository;
     private final RetryRecurringJobFactory retryRecurringJobFactory;
+    private final InstanceRepository instanceRepository;
 
     public RetryTaskManager(
             RetryTaskActionRepository retryTaskActionRepository,
-            RetryRecurringJobFactory retryRecurringJobFactory
+            RetryRecurringJobFactory retryRecurringJobFactory, InstanceRepository instanceRepository
     ) {
         this.retryTaskActionRepository = retryTaskActionRepository;
         this.retryRecurringJobFactory = retryRecurringJobFactory;
+        this.instanceRepository = instanceRepository;
     }
 
     @Override
     public RecurringRetryJob registerTask(
-            RetryTask retryTask
-    ) {
+            RetryTask retryTask,
+            Object originalInstance) {
+        instanceRepository.saveCallableClass(retryTask, originalInstance);
         return retryRecurringJobFactory.createRetryJob(retryTask);
     }
 
     @Override
     public void failTaskAction(
             List<? extends RetryTaskAction.ParameterClassAndValue> parameters,
-            Throwable throwable, RetryTask retryTask
+            Throwable throwable,
+            RetryTask retryTask
     ) {
         if (TaskManager.hasCause(throwable, retryTask.throwable())) {
             OffsetDateTime now = OffsetDateTime.now();
