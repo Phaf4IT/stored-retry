@@ -27,7 +27,7 @@ public abstract class RetryJobFactory {
         public UniqueIdentifier<RetryTaskAction> createJob(RetryTask retryTask, RetryTaskAction retryTaskAction) {
             jobs.put(retryTaskAction, JobState.STARTED);
             scheduledThreadPoolExecutor
-                    .schedule(() -> retryJobHandler.runSpringBean(retryTask)
+                    .schedule(() -> retryJobHandler.retryTaskActionConsumer(retryTask)
                             .andThen(retryTaskAction1 -> jobs.put(retryTaskAction, JobState.ENDED))
                             .accept(retryTaskAction), 0, TimeUnit.MILLISECONDS);
             return new SimpleUniqueIdentifier(retryTaskAction);
@@ -46,6 +46,6 @@ public abstract class RetryJobFactory {
         T id();
     }
 
-    public record SimpleUniqueIdentifier(RetryTaskAction id) implements UniqueIdentifier<RetryTaskAction>{
+    public record SimpleUniqueIdentifier(RetryTaskAction id) implements UniqueIdentifier<RetryTaskAction> {
     }
 }

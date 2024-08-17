@@ -13,7 +13,6 @@ public class RetryableService {
     private final RetryService retryService;
 
     public RetryableService(RetryService retryService) {
-
         this.retryService = retryService;
     }
 

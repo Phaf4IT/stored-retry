@@ -26,11 +26,14 @@ public interface RetryTaskActionRepository {
 
         @Override
         public void save(RetryTaskAction retryTaskAction) {
-            retryTasks.computeIfAbsent(
-                            retryTaskAction.task(),
-                            k -> new LinkedBlockingQueue<>()
-                    )
+            LinkedBlockingQueue<RetryTaskAction> retryTaskActions = retryTasks.computeIfAbsent(
+                    retryTaskAction.task(),
+                    k -> new LinkedBlockingQueue<>()
+            );
+            retryTaskActions
                     .add(retryTaskAction);
+            retryTasks.put(retryTaskAction.task(), retryTaskActions);
+            System.out.println();
         }
 
         @Override

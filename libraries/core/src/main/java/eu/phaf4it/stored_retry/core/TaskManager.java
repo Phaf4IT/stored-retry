@@ -7,7 +7,6 @@ public interface TaskManager {
         if (throwable == null) {
             return false;
         }
-
         if (desiredCause.isAssignableFrom(throwable.getClass())) {
             return true;
         } else {
@@ -15,7 +14,7 @@ public interface TaskManager {
         }
     }
 
-    RecurringRetryJob registerTask(RetryTask retryTask);
+    RecurringRetryJob registerTask(RetryTask retryTask, Object originalInstance);
 
     void failTaskAction(
             List<? extends RetryTaskAction.ParameterClassAndValue> parameters,

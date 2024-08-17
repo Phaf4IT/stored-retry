@@ -34,8 +34,13 @@ public interface RetryRecurringJobHandler {
                 jobIds.add(job);
                 LOG.info("[Retry] Retry job added");
                 retryAll(retryTask, jobIds);
-            }, () -> LOG.debug("[Retry] No more retry tasks for {}", retryTask.task().methodName()));
-            LOG.info("[Retry] Retry all jobIds: {}", jobIds);
+            }, () -> {
+                if (jobIds.isEmpty()) {
+                    LOG.debug("[Retry] No more retry tasks for {}. All jobids now: {}", retryTask.task().methodName(), jobIds);
+                } else {
+                    LOG.info("[Retry] Retry all jobIds: {}", jobIds);
+                }
+            });
             return jobIds;
         }
     }

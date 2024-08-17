@@ -1,5 +1,6 @@
 package eu.phaf4it.stored_retry.spring.boot;
 
+import eu.phaf4it.stored_retry.core.InstanceRepository;
 import eu.phaf4it.stored_retry.core.Migrator;
 import eu.phaf4it.stored_retry.core.RecurringRetryJob;
 import eu.phaf4it.stored_retry.core.RetryJobFactory;
@@ -37,12 +38,29 @@ public class RetryAutoConfiguration {
     @ConditionalOnMissingBean(TaskManager.class)
     public TaskManager taskManager(
             RetryTaskActionRepository retryTaskActionRepository,
-            RetryRecurringJobFactory recurringRetryJobFactory
+            RetryRecurringJobFactory recurringRetryJobFactory,
+            InstanceRepository instanceRepository
     ) {
         return new RetryTaskManager(
                 retryTaskActionRepository,
-                recurringRetryJobFactory
+                recurringRetryJobFactory,
+                instanceRepository
         );
+    }
+
+    @Bean
+    public InstanceRepository instanceRepository(ApplicationContext applicationContext) {
+        return new InstanceRepository() {
+            @Override
+            public Object getCallableClass(RetryTask retryTask) {
+                return applicationContext.getBean(retryTask.task().theClass());
+            }
+
+            @Override
+            public void saveCallableClass(RetryTask retryTask, Object instance) {
+                // not necessary
+            }
+        };
     }
 
     @Bean
@@ -52,8 +70,8 @@ public class RetryAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(RetryJobHandler.class)
-    public RetryJobHandler retryJobHandler(ApplicationContext applicationContext, RetryTaskActionRepository retryTaskActionRepository) {
-        return new RetryJobBeanHandler(retryTaskActionRepository, applicationContext);
+    public RetryJobHandler retryJobHandler(InstanceRepository instanceRepository, RetryTaskActionRepository retryTaskActionRepository) {
+        return new RetryJobBeanHandler(retryTaskActionRepository, instanceRepository);
     }
 
     @Bean
@@ -115,7 +133,7 @@ public class RetryAutoConfiguration {
                                         targetClass,
                                         StoredRetry.class
                                 )
-                                .forEach(method -> registerStoredRetry(taskManager, method, targetClass));
+                                .forEach(method -> registerStoredRetry(taskManager, method, targetClass, bean));
                     }
                 }
             }
@@ -123,8 +141,8 @@ public class RetryAutoConfiguration {
             private void registerStoredRetry(
                     TaskManager taskManager,
                     Method method,
-                    Class<?> targetClass
-            ) {
+                    Class<?> targetClass,
+                    Object bean) {
                 try {
                     StoredRetry annotation = method.getAnnotation(StoredRetry.class);
                     if (targetClass.isAnnotationPresent(org.springframework.web.bind.annotation.RestController.class)) {
@@ -147,7 +165,8 @@ public class RetryAutoConfiguration {
                                             storedRetryProvider.cronIntervalPollableJob()
                                     ),
                                     storedRetryProvider.maxDuration()
-                            )
+                            ),
+                            bean
                     );
                     recurringRetryJob.start();
                     // maybe register retryJob as bean?
